@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // تطبيق خاص بالأصدقاء: صاحب الرابط يستطيع التعديل بدون حساب بكلمة مرور.
+    // جميع المستخدمين يسجّلون دخولًا مجهولًا إلى Firebase Authentication.
+    match /trips/jericho-friends-2026-n7p4f2x9 {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null
+        && request.resource.data.keys().hasOnly(['version','tasks','expenses','targetBudget','updatedAt'])
+        && request.resource.data.expenses is list
+        && request.resource.data.expenses.size() < 2000;
+      allow delete: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
