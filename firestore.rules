@@ -6,8 +6,10 @@ service cloud.firestore {
     match /trips/jericho-friends-2026-n7p4f2x9 {
       allow read: if request.auth != null;
       allow create, update: if request.auth != null
-        && request.resource.data.keys().hasOnly(['version','tasks','expenses','targetBudget','updatedAt'])
+        && request.resource.data.keys().hasOnly(['version','tasks','expenses','villaPayments','targetBudget','updatedAt'])
         && request.resource.data.expenses is list
+        && request.resource.data.tasks is map
+        && request.resource.data.villaPayments is map
         && request.resource.data.expenses.size() < 2000;
       allow delete: if false;
     }
